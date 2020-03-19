@@ -48,6 +48,10 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import me.kevinvista.bluetoothscanner.Device
 import me.kevinvista.bluetoothscanner.DeviceAdapter
 import okhttp3.MediaType
@@ -103,12 +107,31 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
     internal var scanTask: Runnable = object : Runnable {
         override fun run() {
 
-            Executors.newSingleThreadScheduledExecutor().schedule({
-                scanBluetooth()
-            }, 10, TimeUnit.SECONDS)
+//            Executors.newSingleThreadScheduledExecutor().schedule({
+//                scanBluetooth()
+//            }, 10, TimeUnit.SECONDS)
 
-//            handler.postDelayed(this, 5000)
-//            scanBluetooth()
+        //  handler.postDelayed(this, 5000)
+
+
+            GlobalScope.launch(context = Dispatchers.Main) {
+                println("launched coroutine 1")
+                Log.e("launched coroutine 1","launched coroutine 1")
+                // repeat(5, {TimeUnit.SECONDS})
+//                    delay(5000)
+//                    get(devices)
+
+                repeat(5000) {
+                   // Log.e("♥️", "AOM BNK48")
+                    scanBluetooth()
+                    delay(5000)
+                }
+
+                // scanBluetooth()
+            }
+
+            
+
         }
     }
 
@@ -133,17 +156,35 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
                 // devices?.clear()
                 devices?.add(mDevice)
                 deviceAdapter?.notifyDataSetChanged()
-                // get(devices)
+                 get(devices)
+
+
+//                GlobalScope.launch(context = Dispatchers.Main) {
+//                    println("launched coroutine 1")
+//                    Log.e("launched coroutine 1","launched coroutine 1")
+//                    // repeat(5, {TimeUnit.SECONDS})
+////                    delay(5000)
+////                    get(devices)
+//
+//                    repeat(5000) {
+//                        Log.e("♥️", "AOM BNK48")
+//                        delay(5000)
+//                    }
+//
+//                    // scanBluetooth()
+//                }
+
+
 
 //                Executors.newSingleThreadScheduledExecutor().schedule({
 //                    get(devices)
 //                }, 5, TimeUnit.SECONDS)
 
-                Timer().schedule(object : TimerTask() {
-                    override fun run() {
-                        get(devices)
-                    }
-                }, 2500)
+//                Timer().schedule(object : TimerTask() {
+//                    override fun run() {
+//                        get(devices)
+//                    }
+//                }, 2500)
 
 
 //            delayFunction({
@@ -292,7 +333,7 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
     }
 
-    private fun scanBluetooth() {
+    suspend  fun scanBluetooth() {
         bluetoothReceiverRegistered = true
         val filter = IntentFilter()
         filter.addAction(BluetoothDevice.ACTION_FOUND)
@@ -418,7 +459,9 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
                 override fun onError(e: Throwable) {
                     // mainLockerListener?.onStopProcessbar(false)
                     //checkLoadProcessBar.value = com.fg.mdp.fwgfacilitiesfinder.model.login.LoadProcessBar(true)
-                    Log.e("Call request onError", e.toString())
+                    Log.e("Call  onError", e.toString())
+
+                    toast("  detected error " + "\t" + e.toString())
                     // mainLockerListener?.onFailure(e.toString())
                 }
 

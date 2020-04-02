@@ -2,17 +2,13 @@ package com.freewill.phayathaidetect
 
 import android.Manifest
 import android.app.Activity
-import android.app.Application
-import android.app.PendingIntent.getActivity
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.pm.PackageManager
 import android.net.Uri
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -21,17 +17,15 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
 import android.widget.Toast
-import android.widget.Toolbar
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.fg.mdp.fwgfacilitiesfinder.clients.APIClient
 import com.fg.mdp.fwgfacilitiesfinder.model.responsSend.Information
+import com.fg.mdp.fwgfacilitiesfinder.model.responsSend.iTAG
 import com.fg.mdp.fwgfacilitiesfinder.model.responsSend.NurseItem
-import com.freewill.phayathaidetect.extension.delayFunction
+import com.fg.mdp.fwgfacilitiesfinder.model.responsSend.itagItem
+import com.fg.mdp.fwgfacilitiesfinder.model.responsSend.listItem
 import com.freewill.phayathaidetect.extension.getIMEI
 import com.freewill.phayathaidetect.extension.toast
 import com.google.gson.Gson
@@ -39,11 +33,8 @@ import com.google.gson.JsonObject
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
-import com.karumi.dexter.listener.PermissionDeniedResponse
-import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
-import com.karumi.dexter.listener.single.PermissionListener
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -59,8 +50,6 @@ import okhttp3.RequestBody
 import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
@@ -373,6 +362,7 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
 
 
         var dataList: ArrayList<NurseItem> = ArrayList()
+        var listList: ArrayList<listItem> = ArrayList()
 
 
         devices?.forEach { devices ->
@@ -396,9 +386,12 @@ class MainActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
         val currentDate = dateFormatWithZone.format(date)
 
 
+
         val map: HashMap<String, Any> = hashMapOf(
-            "information" to Information(getIMEI(applicationContext), currentDate),
-            "nurse" to dataList
+            "androidbox" to Information(getIMEI(applicationContext), currentDate),
+            "itag" to iTAG("50321a567585340f", listList)
+//            "nurse" to dataList
+
         )
         var gson = Gson()
 

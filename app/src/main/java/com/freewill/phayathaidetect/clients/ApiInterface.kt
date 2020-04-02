@@ -65,7 +65,7 @@ interface ApiInterface {
     ): Observable<Response<JsonObject>>
 
 
-    @POST("/phayathaiAPI/api/detect.php")
+    @POST("/phayathaiv2/api/detect.php")
      fun getSendDetect( @Body data: RequestBody)
     : Observable<Response<JsonObject>>
 

@@ -6,9 +6,10 @@ import com.google.gson.annotations.SerializedName
 
 data class ResponsDetecPhaythai(
 
-	@field:SerializedName("nurse")
-	val nurse: List<NurseItem?>? = null,
 
-	@field:SerializedName("information")
-	val information: Information? = null
+	@field:SerializedName("itag")
+	val itag: List<itagItem?>? = null,
+
+	@field:SerializedName("androidbox")
+	val androidbox: Information? = null
 )
